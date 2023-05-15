@@ -6,6 +6,6 @@ trying to find all the crabs with using as least spaces as possible.
 
 ## Controls
 
-Mouse
-Left Click -> uncover space
-Right Click -> (un)mark space as empty, only as a marker, does nothing gameplay wise
+- Mouse
+- Left Click -> uncover space
+- Right Click -> (un)mark space as empty, only as a marker, does nothing gameplay wise

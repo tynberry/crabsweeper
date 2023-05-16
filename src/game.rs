@@ -1,3 +1,4 @@
+use macroquad::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum GameCellType {
@@ -91,6 +92,58 @@ impl Game {
                 };
                 *cell_number = new_number;
             }
+        }
+    }
+    
+    pub fn render(&self, center_x: f32, center_y: f32, font: &Font) {
+        const CELL_MARGIN: f32 = 5.0;
+        const CELL_SIZE: f32 = 30.0;
+        //vykresli buňky postupně
+        for (index, cell) in self.cells.iter().enumerate() {
+            //extrakce pozice
+            let (grid_x, grid_y) = self.get_pos(index);
+            let (cell_x, cell_y) = (
+                CELL_MARGIN + (CELL_SIZE + CELL_MARGIN) * grid_x as f32,
+                CELL_MARGIN + (CELL_SIZE + CELL_MARGIN) * grid_y as f32,
+            );
+            //pokud neotočeno tak šedá
+            let mut color = WHITE;
+            let mut show_text: Option<String> = None;
+            if !cell.uncovered {
+                color = GRAY;
+            }
+            //barva podle obsahu
+            if cell.uncovered {
+                match cell.cell_type {
+                    GameCellType::Number(numero) => {
+                        color = match numero {
+                            0 => WHITE,
+                            1 => BLUE,
+                            2 => GREEN,
+                            3 => RED,
+                            4 => MAGENTA,
+                            5 => YELLOW,
+                            6 => BROWN,
+                            7 => color_u8!(0, 255, 255, 255),
+                            8 => BLACK,
+                            _ => panic!("Mathematically impossible")
+                        };
+                        show_text = Some(format!("{}", numero));
+                    },
+                    GameCellType::Crab => {
+                        color = MAROON;
+                        show_text = Some("CRAB".to_owned());
+                    },
+                }
+            }
+            //vykresli barvu
+            draw_rectangle(cell_x, cell_y, CELL_SIZE, CELL_SIZE, color);
+            //vykresli text
+            if let Some(text) = show_text {
+                let text_dim = measure_text(&text, Some(font.clone()), 32, 1.0);
+                draw_text(&text, cell_x + (CELL_SIZE - text_dim.width) / 2.0, cell_y + (CELL_SIZE - text_dim.height) / 2.0, 32.0, color);
+            }
+
         }
     }
 }

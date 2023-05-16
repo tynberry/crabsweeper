@@ -1,3 +1,5 @@
+pub mod game;
+
 use macroquad::prelude::*;
 
 #[macroquad::main("Crabsweeper")]
